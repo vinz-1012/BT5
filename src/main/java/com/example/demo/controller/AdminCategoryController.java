@@ -5,8 +5,15 @@ import com.example.demo.repository.CategoryRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/category")
@@ -54,7 +61,59 @@ public class AdminCategoryController {
     // ========== LƯU (THÊM / CẬP NHẬT) ==========
 
     @PostMapping("/save")
-    public String save(@ModelAttribute Category category) {
+    public String save(@ModelAttribute Category category,
+                       @RequestParam(value = "imageOption", required = false, defaultValue = "url") String imageOption,
+                       @RequestParam(value = "imageUrl", required = false) String imageUrl,
+                       @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+
+        String existingImage = null;
+        if (category.getId() != null) {
+            existingImage = categoryRepository.findById(category.getId())
+                    .map(Category::getImage)
+                    .orElse(null);
+        }
+
+        if ("url".equals(imageOption)) {
+            if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                category.setImage(imageUrl.trim());
+            } else if (category.getImage() != null && !category.getImage().trim().isEmpty()) {
+                // Keep image bound to Category model if set
+            } else {
+                category.setImage(existingImage);
+            }
+        } else if ("file".equals(imageOption)) {
+            if (imageFile != null && !imageFile.isEmpty()) {
+                try {
+                    String uploadDir = "uploads/";
+                    Path uploadPath = Paths.get(uploadDir);
+                    if (!Files.exists(uploadPath)) {
+                        Files.createDirectories(uploadPath);
+                    }
+                    String originalFilename = imageFile.getOriginalFilename();
+                    String fileExtension = "";
+                    if (originalFilename != null && originalFilename.contains(".")) {
+                        fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                    }
+                    String newFilename = UUID.randomUUID().toString() + fileExtension;
+                    Path filePath = uploadPath.resolve(newFilename);
+
+                    try (InputStream inputStream = imageFile.getInputStream()) {
+                        Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                    category.setImage("/uploads/" + newFilename);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    category.setImage(existingImage);
+                }
+            } else {
+                category.setImage(existingImage);
+            }
+        } else {
+            if (category.getImage() == null || category.getImage().trim().isEmpty()) {
+                category.setImage(existingImage);
+            }
+        }
+
         categoryRepository.save(category);
         return "redirect:/admin/category";
     }

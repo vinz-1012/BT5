@@ -25,11 +25,11 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) {
         // Seed Categories
         if (categoryRepository.count() == 0) {
-            categoryRepository.save(new Category(null, "Điện thoại", "Các loại điện thoại di động"));
-            categoryRepository.save(new Category(null, "Laptop", "Máy tính xách tay các hãng"));
-            categoryRepository.save(new Category(null, "Phụ kiện", "Phụ kiện công nghệ"));
-            categoryRepository.save(new Category(null, "Máy tính bảng", "Tablet các loại"));
-            categoryRepository.save(new Category(null, "Đồng hồ thông minh", "Smartwatch các hãng"));
+            categoryRepository.save(new Category(null, "Điện thoại", "Các loại điện thoại di động", "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300"));
+            categoryRepository.save(new Category(null, "Laptop", "Máy tính xách tay các hãng", "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300"));
+            categoryRepository.save(new Category(null, "Phụ kiện", "Phụ kiện công nghệ", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300"));
+            categoryRepository.save(new Category(null, "Máy tính bảng", "Tablet các loại", "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=300"));
+            categoryRepository.save(new Category(null, "Đồng hồ thông minh", "Smartwatch các hãng", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300"));
             System.out.println("✅ Đã chèn dữ liệu mẫu cho Categories!");
         }
 

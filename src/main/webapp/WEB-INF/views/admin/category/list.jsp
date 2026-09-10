@@ -11,7 +11,20 @@
 <body>
 <div class="container mt-4">
 
-    <h2 class="mb-3">📂 Danh sách Danh mục</h2>
+    <!-- Thanh chuyển đổi trang Quản lý -->
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded shadow-sm border">
+        <h3 class="m-0 text-primary">⚙️ Trang Quản Trị</h3>
+        <div class="btn-group" role="group">
+            <a href="${pageContext.request.contextPath}/admin/category" class="btn btn-primary active">
+                📂 Quản lý Danh mục
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/user" class="btn btn-outline-primary">
+                👥 Quản lý Người dùng
+            </a>
+        </div>
+    </div>
+
+    <h4 class="mb-3">📂 Danh sách Danh mục</h4>
 
     <!-- Ô tìm kiếm -->
     <form action="${pageContext.request.contextPath}/admin/category" method="get" class="row g-2 mb-3">
@@ -30,10 +43,11 @@
     <a href="${pageContext.request.contextPath}/admin/category/create" class="btn btn-success mb-3">➕ Thêm Danh mục</a>
 
     <!-- Bảng danh sách -->
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover align-middle">
         <thead class="table-dark">
         <tr>
-            <th>ID</th>
+            <th style="width: 60px;">ID</th>
+            <th style="width: 90px;" class="text-center">Hình ảnh</th>
             <th>Tên danh mục</th>
             <th>Mô tả</th>
             <th style="width: 180px;">Hành động</th>
@@ -43,7 +57,24 @@
         <c:forEach var="cat" items="${categories}">
             <tr>
                 <td>${cat.id}</td>
-                <td>${cat.name}</td>
+                <td class="text-center">
+                    <c:choose>
+                        <c:when test="${not empty cat.image}">
+                            <c:choose>
+                                <c:when test="${cat.image.startsWith('http') or cat.image.startsWith('/')}">
+                                    <img src="${cat.image}" alt="${cat.name}" style="width: 50px; height: 50px; object-fit: cover;" class="rounded border shadow-sm">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${pageContext.request.contextPath}/${cat.image}" alt="${cat.name}" style="width: 50px; height: 50px; object-fit: cover;" class="rounded border shadow-sm">
+                                </c:otherwise>
+                            </c:choose>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="badge bg-secondary">Không ảnh</span>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td class="fw-semibold">${cat.name}</td>
                 <td>${cat.description}</td>
                 <td>
                     <a href="${pageContext.request.contextPath}/admin/category/edit/${cat.id}"
@@ -56,7 +87,7 @@
         </c:forEach>
         <c:if test="${empty categories}">
             <tr>
-                <td colspan="4" class="text-center text-muted">Không có dữ liệu</td>
+                <td colspan="5" class="text-center text-muted">Không có dữ liệu</td>
             </tr>
         </c:if>
         </tbody>

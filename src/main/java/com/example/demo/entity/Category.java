@@ -19,4 +19,7 @@ public class Category {
 
     @Column(columnDefinition = "nvarchar(255)")
     private String description;
+
+    @Column(columnDefinition = "nvarchar(500)")
+    private String image;
 }

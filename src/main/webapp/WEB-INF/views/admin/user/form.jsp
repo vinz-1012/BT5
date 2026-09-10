@@ -9,7 +9,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
+
+    <!-- Thanh chuyển đổi trang Quản lý -->
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded shadow-sm border">
+        <h3 class="m-0 text-primary">⚙️ Trang Quản Trị</h3>
+        <div class="btn-group" role="group">
+            <a href="${pageContext.request.contextPath}/admin/category" class="btn btn-outline-primary">
+                📂 Quản lý Danh mục
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/user" class="btn btn-primary active">
+                👥 Quản lý Người dùng
+            </a>
+        </div>
+    </div>
 
     <h2 class="mb-3">
         ${user.id != null ? '✏️ Chỉnh sửa User' : '➕ Thêm User mới'}
